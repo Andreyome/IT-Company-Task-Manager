@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'task_catalog'
 ]
 
 MIDDLEWARE = [
@@ -98,6 +99,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+AUTH_USER_MODEL = 'task_catalog.Worker'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
