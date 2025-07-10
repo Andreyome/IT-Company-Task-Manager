@@ -28,7 +28,7 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('profile/edit/', update_profile, name='profile-update'),
-path('tasks/<int:pk>/done/', mark_task_done, name='task-done'),
-path('task-types/create/', create_task_type, name='tasktype-create'),
-path("positions/create/", create_position, name="position-create"),
+    path('tasks/<int:pk>/done/', mark_task_done, name='task-done'),
+    path('task-types/create/', create_task_type, name='tasktype-create'),
+    path("positions/create/", create_position, name="position-create"),
 ]

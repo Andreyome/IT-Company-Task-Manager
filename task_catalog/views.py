@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Case, When, Value, IntegerField, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
@@ -14,15 +14,23 @@ from task_catalog.models import Worker, Task, TaskType, Position
 def task_board_view(request):
     query = request.GET.get('q', '')
 
-    base_queryset = Task.objects.all()
+    priority_order = Case(
+        When(priority="Urgent", then=Value(0)),
+        When(priority="High", then=Value(1)),
+        When(priority="Medium", then=Value(2)),
+        When(priority="Low", then=Value(3)),
+        output_field=IntegerField()
+    )
+
+    base_queryset = Task.objects.annotate(priority_rank=priority_order)
 
     if query:
         base_queryset = base_queryset.filter(
             Q(name__icontains=query) | Q(description__icontains=query)
         )
 
-    todo_tasks = base_queryset.filter(is_completed=False)
-    done_tasks = base_queryset.filter(is_completed=True)
+    todo_tasks = base_queryset.filter(is_completed=False).order_by('priority_rank', 'deadline')
+    done_tasks = base_queryset.filter(is_completed=True).order_by('priority_rank', 'deadline')
 
     todo_paginator = Paginator(todo_tasks, 5)
     done_paginator = Paginator(done_tasks, 5)
@@ -54,6 +62,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy("task_catalog:index")
+
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
@@ -95,6 +104,7 @@ def update_profile(request):
         form = WorkerUpdateForm(instance=request.user)
     return render(request, 'task_catalog/profile_update.html', {'form': form})
 
+
 @login_required
 def mark_task_done(request, pk):
     task = get_object_or_404(Task, pk=pk)
@@ -103,6 +113,7 @@ def mark_task_done(request, pk):
         task.save()
     return redirect('task_catalog:index')
 
+
 @login_required
 def create_task_type(request):
     if request.method == "POST":
@@ -110,6 +121,7 @@ def create_task_type(request):
         if name:
             TaskType.objects.get_or_create(name=name)
     return redirect(request.META.get('HTTP_REFERER', 'task_catalog:task-list'))
+
 
 @login_required
 def create_position(request):
