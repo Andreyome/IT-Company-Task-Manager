@@ -6,17 +6,19 @@ class Worker(AbstractUser):
     position = models.ForeignKey('Position', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.username} ({self.first_name} {self.last_name}) Position: {self.position}"
+        return f"{self.username} Position: {self.position}"
 
 
 class TaskType(models.Model):
     name = models.CharField(max_length=255)
+
     def __str__(self):
         return self.name
 
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
+        ("Urgent", "Urgent"),
         ("High", "High"),
         ("Medium", "Medium"),
         ("Low", "Low"),
@@ -34,10 +36,7 @@ class Task(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return f"{self.name}: {self.priority}. {self.description} ({self.deadline}) is: {self.is_completed} workers: {self.assignees.count()}"
-
-
-
+        return f"{self.name}: {self.priority}. {self.description} ({self.deadline}) is: {self.is_completed} workers: {self.workers.count()}"
 
 
 class Position(models.Model):
