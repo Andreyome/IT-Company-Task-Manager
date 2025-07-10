@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrastyle %}
+  <!-- Ekko Lightbox -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
+  <!-- Bootstrap 4 or 5 if used -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <style>
+      .ask-board .card-row {
+          margin-bottom: 1.5rem;
+      }
+
+      .ask-board .card-title {
+          font-size: 1.1rem;
+      }
+
+      .badge {
+          font-size: 0.85rem;
+      }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container-fluid task-board py-4">
+
+    <div class="row mb-4">
+      <div class="col">
+        <h1>Task Board</h1>
+      </div>
+      <!-- Navbar Search -->
+      <div class="navbar-search-block">
+        <form class="form-inline" method="get">
+          <div class="input-group input-group-sm">
+            <input type="text" name="q" class="form-control mr-2" placeholder="Search..." value="{{ q }}">
+            <input type="hidden" name="todo_page" value="{{ todo_page.number }}">
+            <input type="hidden" name="done_page" value="{{ done_page.number }}">
+            <div class="input-group-append">
+              <button class="btn btn-navbar" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <!-- To Do Column -->
+      <div class="col-md-6">
+        <div class="card border-primary ">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">To Do</h3>
+            <a href="{% url "task_catalog:task_create" %}" class="card-title mb-0" style="text-decoration: none"><h3>
+              ➕</h3></a>
+          </div>
+          <div class="card-body">
+            {% for task in todo_page %}
+              <div class="card border-primary mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5 class="card-title mb-0"><a
+                      href="{% url "task_catalog:task_detail" pk=task.id %}">{{ task.name }}</a></h5>
+                  {% if task.priority == "Urgent" %}
+                    <span class="badge badge-danger">{{ task.priority }}</span>
+                  {% elif task.priority == "High" %}
+                    <span class="badge badge-warning">{{ task.priority }}</span>
+                  {% elif task.priority == "Medium" %}
+                    <span class="badge badge-primary">{{ task.priority }}</span>
+                  {% elif task.priority == "Low" %}
+                    <span class="badge badge-info">{{ task.priority }}</span>
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <p>{{ task.description|truncatewords:15 }}</p>
+                  <p class="text-muted small mb-1">📅 {{ task.deadline }}</p>
+                  <p class="small text-muted">👤
+                    {% for user in task.workers.all %}{{ user.username }}{% if not forloop.last %}
+                      , {% endif %}{% empty %}—{% endfor %}</p>
+                </div>
+              </div>
+            {% endfor %}
+            <div class="pagination">
+              {% if todo_page.has_previous %}
+                <a href="?q={{ q }}&todo_page={{ todo_page.previous_page_number }}&done_page={{ done_page.number }}">&laquo;</a>
+              {% endif %}
+              <span>{{ todo_page.number }} / {{ todo_page.paginator.num_pages }}</span>
+              {% if todo_page.has_next %}
+                <a href="?q={{ q }}&todo_page={{ todo_page.next_page_number }}&done_page={{ done_page.number }}">&raquo;</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done Column -->
+      <div class="col-md-6">
+        <div class="card border-success">
+          <div class="card-header bg-success text-white">
+            <h3 class="card-title mb-0">Done</h3>
+          </div>
+          <div class="card-body">
+            {% for task in done_page %}
+              <div class="card border-success mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5 class="card-title mb-0"><a
+                      href="{% url "task_catalog:task_detail" pk=task.id %}">{{ task.name }}</a></h5>
+                  <span class="badge badge-success">Done</span>
+                </div>
+                <div class="card-body">
+                  <p><s>{{ task.description|truncatewords:15 }}</s></p>
+                  <p class="text-muted small">✔ Completed</p>
+                </div>
+              </div>
+            {% endfor %}
+            <div class="pagination">
+              {% if done_page.has_previous %}
+                <a href="?q={{ q }}&todo_page={{ todo_page.number }}&done_page={{ done_page.previous_page_number }}">&laquo;</a>
+              {% endif %}
+              <span>{{ done_page.number }} / {{ done_page.paginator.num_pages }}</span>
+              {% if done_page.has_next %}
+                <a href="?q={{ q }}&todo_page={{ todo_page.number }}&done_page={{ done_page.next_page_number }}">&raquo;</a>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+  <script>
+      $(function () {
+          $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+              event.preventDefault();
+              $(this).ekkoLightbox({alwaysShowClose: true});
+          });
+      });
+  </script>
+{% endblock %}
