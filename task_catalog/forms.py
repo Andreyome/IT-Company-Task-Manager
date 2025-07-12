@@ -56,3 +56,9 @@ class WorkerUpdateForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={'readonly': 'readonly'}),
         }
+
+
+class PositionForm(forms.ModelForm):
+    class Meta:
+        model = Position
+        fields = ["name"]
