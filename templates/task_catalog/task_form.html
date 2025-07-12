@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
+{% block title %}
+  {% if task and task.id %}
+    Update Task
+  {% else %}
+    Create Task
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -10,7 +17,13 @@
 
         <div class="card card-primary">
           <div class="card-header">
-            <h3 class="card-title">Create Task</h3>
+            <h3 class="card-title">
+              {% if task and task.id %}
+                Update Task
+              {% else %}
+                Create Task
+              {% endif %}
+            </h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">

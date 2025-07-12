@@ -5,45 +5,47 @@ from django.core.paginator import Paginator
 from django.db.models import Case, When, Value, IntegerField, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
+from django.views import View
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView, FormView, TemplateView
 
-from task_catalog.forms import TaskForm, SignUpForm, WorkerUpdateForm
+from task_catalog.forms import TaskForm, SignUpForm, WorkerUpdateForm, PositionForm
 from task_catalog.models import Worker, Task, TaskType, Position
 
 
-def task_board_view(request):
-    query = request.GET.get('q', '')
+class TaskBoardView(TemplateView):
+    template_name = 'task_catalog/task_list.html'
 
-    priority_order = Case(
-        When(priority="Urgent", then=Value(0)),
-        When(priority="High", then=Value(1)),
-        When(priority="Medium", then=Value(2)),
-        When(priority="Low", then=Value(3)),
-        output_field=IntegerField()
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get('q', '')
 
-    base_queryset = Task.objects.annotate(priority_rank=priority_order)
-
-    if query:
-        base_queryset = base_queryset.filter(
-            Q(name__icontains=query) | Q(description__icontains=query)
+        priority_order = Case(
+            When(priority="Urgent", then=Value(0)),
+            When(priority="High", then=Value(1)),
+            When(priority="Medium", then=Value(2)),
+            When(priority="Low", then=Value(3)),
+            output_field=IntegerField()
         )
 
-    todo_tasks = base_queryset.filter(is_completed=False).order_by('priority_rank', 'deadline')
-    done_tasks = base_queryset.filter(is_completed=True).order_by('priority_rank', 'deadline')
+        base_queryset = Task.objects.annotate(priority_rank=priority_order)
 
-    todo_paginator = Paginator(todo_tasks, 5)
-    done_paginator = Paginator(done_tasks, 5)
+        if query:
+            base_queryset = base_queryset.filter(
+                Q(name__icontains=query) | Q(description__icontains=query)
+            )
 
-    todo_page_number = request.GET.get('todo_page')
-    done_page_number = request.GET.get('done_page')
+        todo_tasks = base_queryset.filter(is_completed=False).order_by('priority_rank', 'deadline')
+        done_tasks = base_queryset.filter(is_completed=True).order_by('priority_rank', 'deadline')
 
-    context = {
-        'q': query,
-        'todo_page': todo_paginator.get_page(todo_page_number),
-        'done_page': done_paginator.get_page(done_page_number),
-    }
-    return render(request, 'task_catalog/task_list.html', context)
+        todo_paginator = Paginator(todo_tasks, 3)
+        done_paginator = Paginator(done_tasks, 3)
+
+        context.update({
+            'q': query,
+            'todo_page': todo_paginator.get_page(self.request.GET.get('todo_page')),
+            'done_page': done_paginator.get_page(self.request.GET.get('done_page')),
+        })
+        return context
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -81,51 +83,45 @@ class WorkerDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("task_catalog:workers_list")
 
 
-def register_view(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('task_catalog:index')
-    else:
-        form = SignUpForm()
-    return render(request, 'registration/register.html', {'form': form})
+class RegisterView(FormView):
+    template_name = 'registration/register.html'
+    form_class = SignUpForm
+    success_url = reverse_lazy('task_catalog:index')
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
 
 
-@login_required
-def update_profile(request):
-    if request.method == 'POST':
-        form = WorkerUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('task_catalog:workers_list')
-    else:
-        form = WorkerUpdateForm(instance=request.user)
-    return render(request, 'task_catalog/profile_update.html', {'form': form})
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = WorkerUpdateForm
+    template_name = 'task_catalog/profile_update.html'
+    success_url = reverse_lazy('task_catalog:workers_list')
+
+    def get_object(self):
+        return self.request.user
 
 
-@login_required
-def mark_task_done(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    if request.method == 'POST':
+class MarkTaskDoneView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
         task.is_completed = True
         task.save()
-    return redirect('task_catalog:index')
+        return redirect('task_catalog:index')
 
 
-@login_required
-def create_task_type(request):
-    if request.method == "POST":
+class CreateTaskTypeView(LoginRequiredMixin, View):
+    def post(self, request):
         name = request.POST.get("name")
         if name:
             TaskType.objects.get_or_create(name=name)
-    return redirect(request.META.get('HTTP_REFERER', 'task_catalog:task-list'))
+        return redirect(request.META.get('HTTP_REFERER', 'task_catalog:task-list'))
 
 
-@login_required
-def create_position(request):
-    name = request.POST.get("name")
-    if name:
-        Position.objects.get_or_create(name=name)
-    return redirect(request.META.get('HTTP_REFERER', 'task_catalog:worker-list'))
+class CreatePosition(LoginRequiredMixin, CreateView):
+    model = Position
+    form_class = PositionForm
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER', reverse_lazy('task_catalog:worker-list'))
