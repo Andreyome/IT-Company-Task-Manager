@@ -1,0 +1,67 @@
+{% load static %}
+<section class="content">
+  <nav class="navbar navbar-expand navbar-white navbar-light">
+    <div class="container-fluid">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'task_catalog:index' %}" class="nav-link">Tasks</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'task_catalog:workers_list' %}" class="nav-link">Workers</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav ml-auto">
+      {% if request.user.is_authenticated %}
+        {% if request.user.is_superuser %}
+          <li class="nav-item">
+            <a href="{% url 'task_catalog:workers_detailed' pk=user.id %}" class="nav-link"
+               style="white-space: nowrap;">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" data-toggle="modal" data-target="#logoutModal" class="nav-link">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a href="{% url 'task_catalog:workers_detailed' pk=user.id %}" class="nav-link"
+               style="white-space: nowrap;">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" data-toggle="modal" data-target="#logoutModal" class="nav-link">Logout</a>
+          </li>
+        {% endif %}
+      {% else %}
+        <li class="nav-item" style="white-space: nowrap;">
+          <a href="{% url 'login' %}" class="nav-link">Sign in</a>
+        </li>
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+    </ul>
+  </nav>
+</section>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to log out?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

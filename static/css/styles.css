@@ -1,0 +1,268 @@
+
+
+.custom-select.form-control-border, .form-control.form-control-border {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    box-shadow: inherit
+}
+
+.custom-select.form-control-border.border-width-2, .form-control.form-control-border.border-width-2 {
+    border-bottom-width: 2px
+}
+
+.custom-select.form-control-border.border-width-3, .form-control.form-control-border.border-width-3 {
+    border-bottom-width: 3px
+}
+
+
+.card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 0 solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+
+
+
+.card-primary:not(.card-outline) > .card-header {
+  background-color: #007bff;
+}
+
+.card-primary:not(.card-outline) > .card-header,
+.card-primary:not(.card-outline) > .card-header a {
+  color: #fff;
+}
+
+.card-primary:not(.card-outline) > .card-header a.active {
+  color: #1f2d3d;
+}
+
+.card-primary.card-outline {
+  border-top: 3px solid #007bff;
+}
+
+.card-primary.card-outline-tabs > .card-header a:hover {
+  border-top: 3px solid #dee2e6;
+}
+
+.card-primary.card-outline-tabs > .card-header a.active,
+.card-primary.card-outline-tabs > .card-header a.active:hover {
+  border-top: 3px solid #007bff;
+}
+
+
+
+.row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -7.5px;
+  margin-left: -7.5px;
+}
+
+
+.content-wrapper {
+  background-color: #f4f6f9;
+}
+
+.content-wrapper > .content {
+  padding: 0 0.5rem;
+}
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
+    width: 100%;
+    padding-right: 7.5px;
+    padding-left: 7.5px;
+    margin-right: auto;
+    margin-left: auto
+}
+@media (min-width: 576px) {
+    .container, .container-sm {
+        max-width: 540px
+    }
+}
+
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 720px
+    }
+}
+
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 960px
+    }
+}
+
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1140px
+    }
+}
+
+
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -7.5px;
+    margin-left: -7.5px
+}
+
+
+.content-wrapper {
+  background-color: #f4f6f9;
+}
+
+
+.content-wrapper > .content {
+    padding: 0 .5rem
+}
+
+
+.login-logo,
+.register-logo {
+  font-size: 2.1rem;
+  font-weight: 300;
+  margin-bottom: .9rem;
+  text-align: center;
+}
+
+.login-logo a,
+.register-logo a {
+  color: #495057;
+}
+
+
+.login-page,
+.register-page {
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #e9ecef;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 100vh;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.login-box,
+.register-box {
+  width: 360px;
+}
+
+
+@media (max-width: 576px) {
+  .login-box,
+  .register-box {
+    margin-top: .5rem;
+    width: 90%;
+  }
+}
+
+.login-box .card,
+.register-box .card {
+  margin-bottom: 0;
+}
+
+
+.login-card-body,
+.register-card-body {
+  background-color: #fff;
+  border-top: 0;
+  color: #666;
+  padding: 20px;
+}
+
+.login-card-body .input-group .form-control,
+.register-card-body .input-group .form-control {
+  border-right: 0;
+}
+
+
+.login-card-body .input-group .form-control:focus,
+.register-card-body .input-group .form-control:focus {
+  box-shadow: none;
+}
+
+.login-card-body .input-group .form-control:focus ~ .input-group-prepend .input-group-text,
+.login-card-body .input-group .form-control:focus ~ .input-group-append .input-group-text,
+.register-card-body .input-group .form-control:focus ~ .input-group-prepend .input-group-text,
+.register-card-body .input-group .form-control:focus ~ .input-group-append .input-group-text {
+  border-color: #80bdff;
+}
+
+.login-card-body .input-group .form-control.is-valid:focus,
+.register-card-body .input-group .form-control.is-valid:focus {
+  box-shadow: none;
+}
+
+.login-card-body .input-group .form-control.is-valid ~ .input-group-prepend .input-group-text,
+.login-card-body .input-group .form-control.is-valid ~ .input-group-append .input-group-text,
+.register-card-body .input-group .form-control.is-valid ~ .input-group-prepend .input-group-text,
+.register-card-body .input-group .form-control.is-valid ~ .input-group-append .input-group-text {
+  border-color: #28a745;
+}
+
+.login-card-body .input-group .form-control.is-invalid:focus,
+.register-card-body .input-group .form-control.is-invalid:focus {
+  box-shadow: none;
+}
+
+.login-card-body .input-group .form-control.is-invalid ~ .input-group-append .input-group-text,
+.register-card-body .input-group .form-control.is-invalid ~ .input-group-append .input-group-text {
+  border-color: #dc3545;
+}
+
+.login-card-body .input-group .input-group-text,
+.register-card-body .input-group .input-group-text {
+  background-color: transparent;
+  border-bottom-right-radius: 0.25rem;
+  border-left: 0;
+  border-top-right-radius: 0.25rem;
+  color: #777;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.login-box-msg,
+.register-box-msg {
+  margin: 0;
+  padding: 0 20px 20px;
+  text-align: center;
+}
+
+.card {
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+    margin-bottom: 1rem
+}
+
+.login-card-body, .register-card-body {
+    background-color: #fff;
+    border-top: 0;
+    color: #666;
+    padding: 20px
+}
+.btn.multiselect {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  text-align: left;
+}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Workers{% endblock %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Workers</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example2" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>E-mail</th>
+                    <th>Position</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for worker in worker_list %}
+                    <tr>
+                      <th><a href="{% url 'task_catalog:workers_detailed' pk=worker.id %}">{{ worker.username }}</a>
+                      </th>
+                      <th>{{ worker.first_name }}</th>
+                      <th>{{ worker.last_name }}</th>
+                      <th>{{ worker.email }}</th>
+                      <th>{{ worker.position }}</th>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+{% endblock %}
+{% block extra_scripts %}
+  <!-- DataTables (CDN) -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+  <script>
+      $(function () {
+          $('#example2').DataTable({
+              paging: true,
+              lengthChange: false,
+              pageLength: 5,
+              searching: false,
+              ordering: true,
+              info: true,
+              autoWidth: false,
+              responsive: true,
+          });
+      });
+  </script>
+{% endblock extra_scripts %}
