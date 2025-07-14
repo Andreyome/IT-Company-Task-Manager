@@ -15,18 +15,20 @@
     <ul class="navbar-nav ml-auto">
       {% if request.user.is_authenticated %}
         {% if request.user.is_superuser %}
-          <li class="nav-item ">
-            <a href="{% url 'admin:password_change' %}" class="nav-link" style="white-space: nowrap;">Change Password</a>
+          <li class="nav-item">
+            <a href="{% url 'task_catalog:workers_detailed' pk=user.id %}" class="nav-link"
+               style="white-space: nowrap;">Profile</a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'admin:logout' %}" class="nav-link">Logout</a>
+            <a href="#" data-toggle="modal" data-target="#logoutModal" class="nav-link">Logout</a>
           </li>
         {% else %}
           <li class="nav-item">
-            <a href="{% url 'task_catalog:workers_detailed' pk=user.id %}" class="nav-link" style="white-space: nowrap;">Profile</a>
+            <a href="{% url 'task_catalog:workers_detailed' pk=user.id %}" class="nav-link"
+               style="white-space: nowrap;">Profile</a>
           </li>
           <li class="nav-item">
-          <a href="#" data-toggle="modal" data-target="#logoutModal" class="nav-link">Logout</a>
+            <a href="#" data-toggle="modal" data-target="#logoutModal" class="nav-link">Logout</a>
           </li>
         {% endif %}
       {% else %}
@@ -40,7 +42,8 @@
   </nav>
 </section>
 
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+     aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
