@@ -1,5 +1,5 @@
 # IT‑Company Task Manager
-A Django-based task management system for IT tems. Create, assign, and track tasks with priorities, positions, and types. 
+A Django-based task management system for IT teams. Create, assign, and track tasks with priorities, positions, and types. 
 ## 🌐 Live Demo
 [Project deployed to Render](https://it-company-task-manager-btri.onrender.com/)
 # Installation
